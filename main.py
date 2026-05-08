@@ -18,7 +18,4 @@ async def root():
 @app.post("/chat")
 async def run_chat(request: QueryRequest):
     response = agent.run_query(request.query)
-    # print(response)
-    # print("----")
-    # print(response["messages"][1].content)
-    return {"response": response["messages"][1].content}
+    return {"response": response["messages"][-1].content}
