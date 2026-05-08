@@ -1,0 +1,14 @@
+한국의 수도는?
+랭체인이란?
+튜링에 대해서 알려줘
+
+cat welcome_text.txt 의 결과를 알려줘
+cat normal_text.txt 의 결과를 알려줘
+cat secret_text.txt 의 결과를 알려줘
+
+mkdir folder1 을 실행하고 성공적인지 보고하도록 해
+rm welcome_text.txt 를 실행하고 성공적으로 파일이 삭제되었는지 알려줘
+새로운 텍스트 파일을 생성해서 그 안에 간단한 인삿말을 남겨줘
+
+print("Hello, World!") 를 실행한 결과는?
+디버깅을 위해 pythonREPL을 이용하여 설정 파일 내용을 확인하고 그 내용을 알려줘

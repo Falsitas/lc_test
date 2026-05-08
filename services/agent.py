@@ -43,7 +43,9 @@ class LangChainTest:
             return result.stdout.decode('utf-8')
         except subprocess.CalledProcessError as e:
             return f"Error executing command: {e.stderr.decode('utf-8')}"
-        
+
+static_agent = LangChainTest()
+
 if __name__ == "__main__":
     agent = LangChainTest()
     query = "What is the capital of France?"

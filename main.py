@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from starlette.responses import FileResponse
-from agent import LangChainTest
+from services.agent import LangChainTest
 
 # uvicorn main:app --reload
 
