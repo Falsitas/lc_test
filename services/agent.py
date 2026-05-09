@@ -22,27 +22,27 @@ class LangChainTest:
             "messages": [{"role": "user", "content": query}]
         })
     
-    # # tools
-    # @tool
-    # def pythonREPL(code: str) -> str:
-    #     """Execute Python code and return the output."""
-    #     try:
-    #         # Create a local namespace for executing the code
-    #         local_namespace = {}
-    #         exec(code, {}, local_namespace)
-    #         return str(local_namespace.get("result", "No result variable found."))
-    #     except Exception as e:
-    #         return f"Error executing code: {e}"
+    # tools
+    @tool
+    def pythonREPL(code: str) -> str:
+        """Execute Python code and return the output."""
+        try:
+            # Create a local namespace for executing the code
+            local_namespace = {}
+            exec(code, {}, local_namespace)
+            return str(local_namespace.get("result", "No result variable found."))
+        except Exception as e:
+            return f"Error executing code: {e}"
         
-    # @tool
-    # def runCommandOnShell(command: str) -> str:
-    #     """Execute a shell command and return the output."""
-    #     import subprocess
-    #     try:
-    #         result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    #         return result.stdout.decode('utf-8')
-    #     except subprocess.CalledProcessError as e:
-    #         return f"Error executing command: {e.stderr.decode('utf-8')}"
+    @tool
+    def runCommandOnShell(command: str) -> str:
+        """Execute a shell command and return the output."""
+        import subprocess
+        try:
+            result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            return result.stdout.decode('utf-8')
+        except subprocess.CalledProcessError as e:
+            return f"Error executing command: {e.stderr.decode('utf-8')}"
 
 static_agent = LangChainTest()
 
