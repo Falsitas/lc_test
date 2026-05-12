@@ -4,16 +4,27 @@ from langchain.tools import tool
 
 from dotenv import load_dotenv
 
+from apps.users.permission import is_aplha
+
 load_dotenv()
 
 class LangChainTest:
-    def __init__(self):
+    def __init__(self, group):
+        '''@param group: user groups to use for the model
+            -"ALPHA": Can access tools
+            -"BETA": Cannot access tools, default group
+        '''
         self.model = ChatGoogleGenerativeAI(
             model="gemini-2.5-flash-lite"
         )
+        if group == "ALPHA":
+            tools = [LangChainTest.pythonREPL, LangChainTest.runCommandOnShell]
+        else:
+            tools = []
+
         self.agent = create_agent(
             model=self.model,
-            tools=[LangChainTest.pythonREPL, LangChainTest.runCommandOnShell],
+            tools=tools,
             system_prompt="You are a helpful assistant"
         )
 
@@ -43,8 +54,6 @@ class LangChainTest:
             return result.stdout.decode('utf-8')
         except subprocess.CalledProcessError as e:
             return f"Error executing command: {e.stderr.decode('utf-8')}"
-
-static_agent = LangChainTest()
 
 if __name__ == "__main__":
     agent = LangChainTest()
