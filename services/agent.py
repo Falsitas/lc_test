@@ -1,12 +1,36 @@
 from langchain.agents import create_agent
+from langchain.agents.middleware import AgentMiddleware, AgentState, wrap_model_call, ModelRequest, ModelResponse
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.tools import tool
+from typing import Callable
 
 from dotenv import load_dotenv
 
 from apps.users.permission import is_aplha
+from security.context import security_context
 
 load_dotenv()
+
+@wrap_model_call
+def attribute_based_tool(request: ModelRequest, handler: Callable[[ModelRequest], ModelResponse]) -> ModelResponse:
+    """Select tools based on user attributes."""
+    print("Middleware invoked")
+    ctx = security_context.get()
+    user = ctx.get("user")
+    ip = ctx.get("ip")
+    time = ctx.get("time")
+    state = request.state
+
+    print(f"User: {user}")
+    print(f"IP: {ip}")
+    print(f"Time: {time}")
+
+    if not user.groups.filter(name='ALPHA').exists() or ip != "127.0.0.1" or time.hour < 9 or time.hour > 15:
+        print("tool access denied")
+        request = request.override(tools=[])
+    else:        print("tool access granted")
+
+    return handler(request)
 
 class LangChainTest:
     def __init__(self, group):
@@ -19,14 +43,19 @@ class LangChainTest:
         )
         if group == "ALPHA":
             tools = [LangChainTest.pythonREPL, LangChainTest.runCommandOnShell]
+            self.agent = create_agent(
+                model=self.model,
+                tools=tools,
+                system_prompt="You are a helpful assistant",
+                middleware=[attribute_based_tool]
+            )
         else:
             tools = []
-
-        self.agent = create_agent(
-            model=self.model,
-            tools=tools,
-            system_prompt="You are a helpful assistant"
-        )
+            self.agent = create_agent(
+                model=self.model,
+                tools=tools,
+                system_prompt="You are a helpful assistant"
+            )
 
     def run_query(self, query: str) -> str:
         return self.agent.invoke({
